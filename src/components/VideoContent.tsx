@@ -1,0 +1,228 @@
+import { Button } from '@/components/ui/button';
+import { Badge } from '@/components/ui/badge';
+import { Card } from '@/components/ui/card';
+import { Avatar, AvatarFallback } from '@/components/ui/avatar';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import Icon from '@/components/ui/icon';
+import VideoCard from './VideoCard';
+import type { Video } from './VideoCard';
+import type { ViewType } from './Header';
+
+interface VideoContentProps {
+  activeView: ViewType;
+  selectedCategory: string;
+  setSelectedCategory: (category: string) => void;
+  categories: string[];
+  mockVideos: Video[];
+  setActiveView: (view: ViewType) => void;
+  setSelectedVideo: (video: Video) => void;
+}
+
+export default function VideoContent({
+  activeView,
+  selectedCategory,
+  setSelectedCategory,
+  categories,
+  mockVideos,
+  setActiveView,
+  setSelectedVideo
+}: VideoContentProps) {
+  return (
+    <div className="container mx-auto px-4 py-6 animate-fade-in">
+      <div className="flex gap-2 overflow-x-auto pb-4 mb-6 scrollbar-hide">
+        {categories.map((cat) => (
+          <Button
+            key={cat}
+            variant={selectedCategory === cat ? 'default' : 'secondary'}
+            size="sm"
+            onClick={() => setSelectedCategory(cat)}
+            className="whitespace-nowrap"
+          >
+            {cat}
+          </Button>
+        ))}
+      </div>
+
+      {activeView === 'home' && (
+        <>
+          <section className="mb-8">
+            <div className="relative aspect-[21/9] rounded-xl overflow-hidden mb-8">
+              <img 
+                src="https://images.unsplash.com/photo-1536440136628-849c177e76a1?w=1600&h=600&fit=crop"
+                alt="Hero"
+                className="w-full h-full object-cover"
+              />
+              <div className="absolute inset-0 bg-gradient-to-r from-black/80 via-black/40 to-transparent flex items-center">
+                <div className="container mx-auto px-8 max-w-2xl animate-slide-up">
+                  <Badge className="mb-3 gradient-primary">Trending</Badge>
+                  <h2 className="text-5xl font-bold mb-4">Топ видео недели</h2>
+                  <p className="text-lg text-foreground/90 mb-6">
+                    Самые популярные и обсуждаемые видео за последние 7 дней
+                  </p>
+                  <Button 
+                    size="lg" 
+                    className="gradient-primary gap-2"
+                    onClick={() => {
+                      setActiveView('player');
+                      setSelectedVideo(mockVideos[0]);
+                    }}
+                  >
+                    <Icon name="Play" size={20} />
+                    Смотреть сейчас
+                  </Button>
+                </div>
+              </div>
+            </div>
+          </section>
+
+          <section className="mb-8">
+            <h2 className="text-2xl font-bold mb-4 flex items-center gap-2">
+              <Icon name="TrendingUp" size={24} />
+              Популярное сейчас
+            </h2>
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+              {mockVideos.slice(0, 6).map((video) => (
+                <VideoCard 
+                  key={video.id} 
+                  video={video}
+                  onClick={() => {
+                    setActiveView('player');
+                    setSelectedVideo(video);
+                  }}
+                />
+              ))}
+            </div>
+          </section>
+        </>
+      )}
+
+      {activeView === 'catalog' && (
+        <section>
+          <h2 className="text-2xl font-bold mb-4">Каталог видео</h2>
+          <Tabs defaultValue="all" className="w-full">
+            <TabsList className="mb-4">
+              <TabsTrigger value="all">Все</TabsTrigger>
+              <TabsTrigger value="new">Новые</TabsTrigger>
+              <TabsTrigger value="popular">Популярные</TabsTrigger>
+            </TabsList>
+            <TabsContent value="all" className="mt-6">
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+                {mockVideos.map((video) => (
+                  <VideoCard 
+                    key={video.id} 
+                    video={video}
+                    onClick={() => {
+                      setActiveView('player');
+                      setSelectedVideo(video);
+                    }}
+                  />
+                ))}
+              </div>
+            </TabsContent>
+            <TabsContent value="new" className="mt-6">
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+                {mockVideos.slice(0, 4).map((video) => (
+                  <VideoCard 
+                    key={video.id} 
+                    video={video}
+                    onClick={() => {
+                      setActiveView('player');
+                      setSelectedVideo(video);
+                    }}
+                  />
+                ))}
+              </div>
+            </TabsContent>
+            <TabsContent value="popular" className="mt-6">
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+                {mockVideos.slice(2).map((video) => (
+                  <VideoCard 
+                    key={video.id} 
+                    video={video}
+                    onClick={() => {
+                      setActiveView('player');
+                      setSelectedVideo(video);
+                    }}
+                  />
+                ))}
+              </div>
+            </TabsContent>
+          </Tabs>
+        </section>
+      )}
+
+      {activeView === 'favorites' && (
+        <section>
+          <h2 className="text-2xl font-bold mb-4 flex items-center gap-2">
+            <Icon name="Heart" size={24} className="text-primary" />
+            Избранное
+          </h2>
+          {mockVideos.length > 0 ? (
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+              {mockVideos.slice(0, 3).map((video) => (
+                <VideoCard 
+                  key={video.id} 
+                  video={video}
+                  onClick={() => {
+                    setActiveView('player');
+                    setSelectedVideo(video);
+                  }}
+                />
+              ))}
+            </div>
+          ) : (
+            <Card className="p-12 text-center">
+              <Icon name="Heart" size={48} className="mx-auto mb-4 text-muted-foreground" />
+              <p className="text-muted-foreground">Нет избранных видео</p>
+            </Card>
+          )}
+        </section>
+      )}
+
+      {activeView === 'profile' && (
+        <section className="animate-fade-in">
+          <Card className="p-6 mb-6">
+            <div className="flex items-start gap-6">
+              <Avatar className="h-24 w-24">
+                <AvatarFallback className="gradient-accent text-3xl font-bold">МП</AvatarFallback>
+              </Avatar>
+              <div className="flex-1">
+                <h2 className="text-2xl font-bold mb-2">Мой Профиль</h2>
+                <p className="text-muted-foreground mb-4">Пользователь с 2024 года</p>
+                <div className="flex gap-6 text-sm">
+                  <div>
+                    <p className="font-semibold">15</p>
+                    <p className="text-muted-foreground">Подписки</p>
+                  </div>
+                  <div>
+                    <p className="font-semibold">3</p>
+                    <p className="text-muted-foreground">Избранное</p>
+                  </div>
+                  <div>
+                    <p className="font-semibold">127</p>
+                    <p className="text-muted-foreground">Просмотров</p>
+                  </div>
+                </div>
+              </div>
+              <Button className="gradient-primary">Редактировать</Button>
+            </div>
+          </Card>
+
+          <h3 className="text-xl font-bold mb-4">История просмотров</h3>
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+            {mockVideos.slice(0, 6).map((video) => (
+              <VideoCard 
+                key={video.id} 
+                video={video}
+                onClick={() => {
+                  setActiveView('player');
+                  setSelectedVideo(video);
+                }}
+              />
+            ))}
+          </div>
+        </section>
+      )}
+    </div>
+  );
+}

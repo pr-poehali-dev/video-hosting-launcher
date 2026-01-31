@@ -2,7 +2,9 @@ import { useState } from 'react';
 import Header from '@/components/Header';
 import VideoPlayer from '@/components/VideoPlayer';
 import VideoContent from '@/components/VideoContent';
+import UploadVideoForm from '@/components/UploadVideoForm';
 import type { ViewType } from '@/components/Header';
+import type { Video } from '@/components/VideoCard';
 
 const mockVideos = [
   {
@@ -81,6 +83,12 @@ export default function Index() {
   const [activeView, setActiveView] = useState<ViewType>('home');
   const [selectedVideo, setSelectedVideo] = useState(mockVideos[0]);
   const [videoQuality, setVideoQuality] = useState('1080p');
+  const [showUploadForm, setShowUploadForm] = useState(false);
+  const [videos, setVideos] = useState(mockVideos);
+
+  const handleUploadSuccess = (newVideo: Video) => {
+    setVideos([newVideo, ...videos]);
+  };
 
   return (
     <div className="min-h-screen bg-background">
@@ -89,14 +97,22 @@ export default function Index() {
         setSearchQuery={setSearchQuery}
         activeView={activeView}
         setActiveView={setActiveView}
+        onUploadClick={() => setShowUploadForm(true)}
       />
+
+      {showUploadForm && (
+        <UploadVideoForm
+          onClose={() => setShowUploadForm(false)}
+          onUploadSuccess={handleUploadSuccess}
+        />
+      )}
 
       {activeView === 'player' && (
         <VideoPlayer 
           selectedVideo={selectedVideo}
           videoQuality={videoQuality}
           setVideoQuality={setVideoQuality}
-          mockVideos={mockVideos}
+          mockVideos={videos}
           setSelectedVideo={setSelectedVideo}
         />
       )}
@@ -107,7 +123,7 @@ export default function Index() {
           selectedCategory={selectedCategory}
           setSelectedCategory={setSelectedCategory}
           categories={categories}
-          mockVideos={mockVideos}
+          mockVideos={videos}
           setActiveView={setActiveView}
           setSelectedVideo={setSelectedVideo}
         />

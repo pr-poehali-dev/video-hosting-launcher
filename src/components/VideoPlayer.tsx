@@ -1,7 +1,10 @@
+import { useState, useEffect } from 'react';
 import { Card } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Avatar, AvatarFallback } from '@/components/ui/avatar';
 import Icon from '@/components/ui/icon';
+import CustomVideoPlayer from './CustomVideoPlayer';
+import { storage } from '@/lib/storage';
 import type { Video } from './VideoCard';
 
 interface VideoPlayerProps {
@@ -19,36 +22,46 @@ export default function VideoPlayer({
   mockVideos,
   setSelectedVideo 
 }: VideoPlayerProps) {
+  const [isLiked, setIsLiked] = useState(false);
+  const [likesCount, setLikesCount] = useState(15000);
+  const [isSubscribed, setIsSubscribed] = useState(false);
+  const [isFavorite, setIsFavorite] = useState(false);
+
+  useEffect(() => {
+    setIsLiked(storage.isLiked(selectedVideo.id));
+    setLikesCount(storage.getLikesCount(selectedVideo.id));
+    setIsSubscribed(storage.isSubscribed(selectedVideo.author));
+    setIsFavorite(storage.isFavorite(selectedVideo.id));
+  }, [selectedVideo]);
+
+  const handleLike = () => {
+    const newLiked = storage.toggleLike(selectedVideo.id);
+    setIsLiked(newLiked);
+    setLikesCount(newLiked ? likesCount + 1 : likesCount - 1);
+  };
+
+  const handleSubscribe = () => {
+    const newSubscribed = storage.toggleSubscription(selectedVideo.author);
+    setIsSubscribed(newSubscribed);
+  };
+
+  const handleFavorite = () => {
+    const newFavorite = storage.toggleFavorite(selectedVideo.id);
+    setIsFavorite(newFavorite);
+  };
   return (
     <div className="container mx-auto px-4 py-6 animate-fade-in">
       <div className="grid lg:grid-cols-3 gap-6">
         <div className="lg:col-span-2 space-y-4">
-          <Card className="overflow-hidden border-border">
-            <div className="relative aspect-video bg-black">
-              <img 
-                src={selectedVideo.thumbnail}
-                alt={selectedVideo.title}
-                className="w-full h-full object-cover"
-              />
-              <div className="absolute inset-0 flex items-center justify-center">
-                <Button size="lg" className="rounded-full w-20 h-20 gradient-primary">
-                  <Icon name="Play" size={32} />
-                </Button>
-              </div>
-              <div className="absolute bottom-4 right-4 flex gap-2">
-                {selectedVideo.quality.map((q) => (
-                  <Button
-                    key={q}
-                    size="sm"
-                    variant={videoQuality === q ? 'default' : 'secondary'}
-                    onClick={() => setVideoQuality(q)}
-                    className="text-xs"
-                  >
-                    {q}
-                  </Button>
-                ))}
-              </div>
-            </div>
+          <Card className="overflow-hidden border-border p-0">
+            <CustomVideoPlayer
+              videoUrl="https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4"
+              thumbnailUrl={selectedVideo.thumbnail}
+              title={selectedVideo.title}
+              qualities={selectedVideo.quality}
+              selectedQuality={videoQuality}
+              onQualityChange={setVideoQuality}
+            />
           </Card>
 
           <div className="space-y-4">
@@ -65,12 +78,29 @@ export default function VideoPlayer({
                     <p className="font-semibold">{selectedVideo.author}</p>
                     <p className="text-sm text-muted-foreground">2.5M подписчиков</p>
                   </div>
-                  <Button className="gradient-primary">Подписаться</Button>
+                  <Button 
+                    className={isSubscribed ? 'bg-muted hover:bg-muted/80' : 'gradient-primary'}
+                    onClick={handleSubscribe}
+                  >
+                    {isSubscribed ? 'Подписаны' : 'Подписаться'}
+                  </Button>
                 </div>
                 <div className="flex gap-2">
-                  <Button variant="secondary" className="gap-2">
-                    <Icon name="ThumbsUp" size={18} />
-                    15K
+                  <Button 
+                    variant={isLiked ? 'default' : 'secondary'} 
+                    className="gap-2"
+                    onClick={handleLike}
+                  >
+                    <Icon name="ThumbsUp" size={18} className={isLiked ? 'fill-current' : ''} />
+                    {likesCount.toLocaleString()}
+                  </Button>
+                  <Button 
+                    variant={isFavorite ? 'default' : 'secondary'} 
+                    className="gap-2"
+                    onClick={handleFavorite}
+                  >
+                    <Icon name="Heart" size={18} className={isFavorite ? 'fill-current' : ''} />
+                    {isFavorite ? 'В избранном' : 'В избранное'}
                   </Button>
                   <Button variant="secondary" className="gap-2">
                     <Icon name="Share2" size={18} />

@@ -1,3 +1,4 @@
+import { useEffect, useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Card } from '@/components/ui/card';
@@ -5,6 +6,7 @@ import { Avatar, AvatarFallback } from '@/components/ui/avatar';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import Icon from '@/components/ui/icon';
 import VideoCard from './VideoCard';
+import { storage } from '@/lib/storage';
 import type { Video } from './VideoCard';
 import type { ViewType } from './Header';
 
@@ -27,6 +29,14 @@ export default function VideoContent({
   setActiveView,
   setSelectedVideo
 }: VideoContentProps) {
+  const [favoriteVideos, setFavoriteVideos] = useState<Video[]>([]);
+
+  useEffect(() => {
+    const favoriteIds = storage.getFavoriteVideos();
+    const favorites = mockVideos.filter(video => favoriteIds.includes(video.id));
+    setFavoriteVideos(favorites);
+  }, [mockVideos, activeView]);
+
   return (
     <div className="container mx-auto px-4 py-6 animate-fade-in">
       <div className="flex gap-2 overflow-x-auto pb-4 mb-6 scrollbar-hide">
@@ -157,9 +167,9 @@ export default function VideoContent({
             <Icon name="Heart" size={24} className="text-primary" />
             Избранное
           </h2>
-          {mockVideos.length > 0 ? (
+          {favoriteVideos.length > 0 ? (
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-              {mockVideos.slice(0, 3).map((video) => (
+              {favoriteVideos.map((video) => (
                 <VideoCard 
                   key={video.id} 
                   video={video}
@@ -174,6 +184,7 @@ export default function VideoContent({
             <Card className="p-12 text-center">
               <Icon name="Heart" size={48} className="mx-auto mb-4 text-muted-foreground" />
               <p className="text-muted-foreground">Нет избранных видео</p>
+              <p className="text-sm text-muted-foreground mt-2">Добавляйте видео в избранное, нажимая на кнопку сердечка</p>
             </Card>
           )}
         </section>

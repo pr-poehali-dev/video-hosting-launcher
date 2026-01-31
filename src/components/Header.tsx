@@ -10,9 +10,10 @@ interface HeaderProps {
   setSearchQuery: (query: string) => void;
   activeView: ViewType;
   setActiveView: (view: ViewType) => void;
+  onUploadClick: () => void;
 }
 
-export default function Header({ searchQuery, setSearchQuery, activeView, setActiveView }: HeaderProps) {
+export default function Header({ searchQuery, setSearchQuery, activeView, setActiveView, onUploadClick }: HeaderProps) {
   return (
     <header className="sticky top-0 z-50 bg-background/95 backdrop-blur-sm border-b border-border">
       <div className="container mx-auto px-4 py-3">
@@ -65,6 +66,15 @@ export default function Header({ searchQuery, setSearchQuery, activeView, setAct
           </div>
 
           <div className="flex items-center gap-2">
+            <Button 
+              variant="default" 
+              size="sm" 
+              className="gradient-primary gap-2"
+              onClick={onUploadClick}
+            >
+              <Icon name="Upload" size={18} />
+              <span className="hidden sm:inline">Загрузить</span>
+            </Button>
             <Button size="icon" variant="ghost">
               <Icon name="Bell" size={20} />
             </Button>

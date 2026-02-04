@@ -6,6 +6,7 @@ import { Avatar, AvatarFallback } from '@/components/ui/avatar';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import Icon from '@/components/ui/icon';
 import VideoCard from './VideoCard';
+import ProfileEditModal from './ProfileEditModal';
 import { storage } from '@/lib/storage';
 import type { Video } from './VideoCard';
 import type { ViewType } from './Header';
@@ -30,6 +31,12 @@ export default function VideoContent({
   setSelectedVideo
 }: VideoContentProps) {
   const [favoriteVideos, setFavoriteVideos] = useState<Video[]>([]);
+  const [showProfileEdit, setShowProfileEdit] = useState(false);
+  const [profile, setProfile] = useState({
+    name: 'Мой Профиль',
+    bio: 'Пользователь с 2024 года',
+    avatar: 'МП'
+  });
 
   useEffect(() => {
     const favoriteIds = storage.getFavoriteVideos();
@@ -192,21 +199,28 @@ export default function VideoContent({
 
       {activeView === 'profile' && (
         <section className="animate-fade-in">
+          {showProfileEdit && (
+            <ProfileEditModal
+              onClose={() => setShowProfileEdit(false)}
+              currentProfile={profile}
+              onSave={setProfile}
+            />
+          )}
           <Card className="p-6 mb-6">
             <div className="flex items-start gap-6">
               <Avatar className="h-24 w-24">
-                <AvatarFallback className="gradient-accent text-3xl font-bold">МП</AvatarFallback>
+                <AvatarFallback className="gradient-accent text-3xl font-bold">{profile.avatar}</AvatarFallback>
               </Avatar>
               <div className="flex-1">
-                <h2 className="text-2xl font-bold mb-2">Мой Профиль</h2>
-                <p className="text-muted-foreground mb-4">Пользователь с 2024 года</p>
+                <h2 className="text-2xl font-bold mb-2">{profile.name}</h2>
+                <p className="text-muted-foreground mb-4">{profile.bio}</p>
                 <div className="flex gap-6 text-sm">
                   <div>
                     <p className="font-semibold">15</p>
                     <p className="text-muted-foreground">Подписки</p>
                   </div>
                   <div>
-                    <p className="font-semibold">3</p>
+                    <p className="font-semibold">{favoriteVideos.length}</p>
                     <p className="text-muted-foreground">Избранное</p>
                   </div>
                   <div>
@@ -215,7 +229,10 @@ export default function VideoContent({
                   </div>
                 </div>
               </div>
-              <Button className="gradient-primary">Редактировать</Button>
+              <Button className="gradient-primary" onClick={() => setShowProfileEdit(true)}>
+                <Icon name="Pencil" size={16} className="mr-2" />
+                Редактировать
+              </Button>
             </div>
           </Card>
 

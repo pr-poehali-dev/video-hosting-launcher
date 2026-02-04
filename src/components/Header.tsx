@@ -19,9 +19,12 @@ export default function Header({ searchQuery, setSearchQuery, activeView, setAct
       <div className="container mx-auto px-4 py-3">
         <div className="flex items-center justify-between gap-4">
           <div className="flex items-center gap-6">
-            <h1 className="text-2xl font-bold gradient-primary bg-clip-text text-transparent">
-              VideoHost
-            </h1>
+            <div className="flex items-center gap-2 cursor-pointer hover-scale" onClick={() => setActiveView('home')}>
+              <Icon name="Play" size={28} className="text-primary" />
+              <h1 className="text-2xl font-bold gradient-primary bg-clip-text text-transparent">
+                VideoHost
+              </h1>
+            </div>
             <nav className="hidden md:flex gap-1">
               <Button 
                 variant={activeView === 'home' ? 'default' : 'ghost'}

@@ -145,34 +145,34 @@ export default function VideoPlayer({
           </div>
         </div>
 
-        <div className="space-y-3">
-          <h3 className="font-semibold flex items-center gap-2">
-            <Icon name="Sparkles" size={18} />
+        <div className="space-y-2">
+          <h3 className="text-sm font-semibold flex items-center gap-2">
+            <Icon name="Sparkles" size={16} />
             Рекомендации
           </h3>
-          {mockVideos.slice(0, 4).map((video) => (
+          {mockVideos.slice(0, 5).map((video) => (
             <Card 
               key={video.id}
-              className="overflow-hidden hover:border-primary transition-colors cursor-pointer group"
+              className="overflow-hidden hover:border-primary transition-colors cursor-pointer group p-0"
               onClick={() => setSelectedVideo(video)}
             >
               <div className="flex gap-2">
-                <div className="relative w-40 aspect-video overflow-hidden flex-shrink-0">
+                <div className="relative w-32 aspect-video overflow-hidden flex-shrink-0">
                   <img 
                     src={video.thumbnail}
                     alt={video.title}
                     className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-300"
                   />
-                  <div className="absolute bottom-1 right-1 bg-black/90 px-1 py-0.5 rounded text-xs">
+                  <div className="absolute bottom-1 right-1 bg-black/90 px-1 py-0.5 rounded text-[10px]">
                     {video.duration}
                   </div>
                 </div>
-                <div className="p-2 flex-1 min-w-0">
-                  <h4 className="text-sm font-semibold line-clamp-2 group-hover:text-primary transition-colors">
+                <div className="py-1.5 pr-2 flex-1 min-w-0">
+                  <h4 className="text-xs font-semibold line-clamp-2 group-hover:text-primary transition-colors">
                     {video.title}
                   </h4>
-                  <p className="text-xs text-muted-foreground mt-1">{video.author}</p>
-                  <p className="text-xs text-muted-foreground">{video.views} просмотров</p>
+                  <p className="text-[10px] text-muted-foreground mt-0.5">{video.author}</p>
+                  <p className="text-[10px] text-muted-foreground">{video.views} • {video.uploadDate}</p>
                 </div>
               </div>
             </Card>

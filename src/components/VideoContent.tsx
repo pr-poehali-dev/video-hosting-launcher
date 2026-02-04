@@ -34,6 +34,7 @@ export default function VideoContent({
 }: VideoContentProps) {
   const [favoriteVideos, setFavoriteVideos] = useState<Video[]>([]);
   const [showProfileEdit, setShowProfileEdit] = useState(false);
+  const [showBanner, setShowBanner] = useState(true);
   const [profile, setProfile] = useState({
     name: 'Мой Профиль',
     bio: 'Пользователь с 2024 года',
@@ -64,35 +65,45 @@ export default function VideoContent({
 
       {activeView === 'home' && (
         <>
-          <section className="mb-8">
-            <div className="relative aspect-[21/6] rounded-xl overflow-hidden mb-8">
-              <img 
-                src="https://images.unsplash.com/photo-1536440136628-849c177e76a1?w=1600&h=600&fit=crop"
-                alt="Hero"
-                className="w-full h-full object-cover"
-              />
-              <div className="absolute inset-0 bg-gradient-to-r from-black/80 via-black/40 to-transparent flex items-center">
-                <div className="container mx-auto px-6 max-w-xl animate-slide-up">
-                  <Badge className="mb-2 gradient-primary text-xs">Trending</Badge>
-                  <h2 className="text-3xl font-bold mb-2">Топ видео недели</h2>
-                  <p className="text-sm text-foreground/90 mb-4">
-                    Самые популярные и обсуждаемые видео за последние 7 дней
-                  </p>
-                  <Button 
-                    size="sm" 
-                    className="gradient-primary gap-2"
-                    onClick={() => {
-                      setActiveView('player');
-                      setSelectedVideo(mockVideos[0]);
-                    }}
-                  >
-                    <Icon name="Play" size={16} />
-                    Смотреть сейчас
-                  </Button>
+          {showBanner && (
+            <section className="mb-8 animate-fade-in">
+              <div className="relative aspect-[21/6] rounded-xl overflow-hidden mb-8">
+                <img 
+                  src="https://images.unsplash.com/photo-1536440136628-849c177e76a1?w=1600&h=600&fit=crop"
+                  alt="Hero"
+                  className="w-full h-full object-cover"
+                />
+                <div className="absolute inset-0 bg-gradient-to-r from-black/80 via-black/40 to-transparent flex items-center">
+                  <div className="container mx-auto px-6 max-w-xl animate-slide-up">
+                    <Badge className="mb-2 gradient-primary text-xs">Trending</Badge>
+                    <h2 className="text-3xl font-bold mb-2">Топ видео недели</h2>
+                    <p className="text-sm text-foreground/90 mb-4">
+                      Самые популярные и обсуждаемые видео за последние 7 дней
+                    </p>
+                    <Button 
+                      size="sm" 
+                      className="gradient-primary gap-2"
+                      onClick={() => {
+                        setActiveView('player');
+                        setSelectedVideo(mockVideos[0]);
+                      }}
+                    >
+                      <Icon name="Play" size={16} />
+                      Смотреть сейчас
+                    </Button>
+                  </div>
                 </div>
+                <Button
+                  size="icon"
+                  variant="ghost"
+                  className="absolute top-2 right-2 h-8 w-8 bg-black/50 hover:bg-black/70 text-white"
+                  onClick={() => setShowBanner(false)}
+                >
+                  <Icon name="X" size={16} />
+                </Button>
               </div>
-            </div>
-          </section>
+            </section>
+          )}
 
           <section className="mb-8">
             <h2 className="text-2xl font-bold mb-4 flex items-center gap-2">

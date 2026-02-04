@@ -34,7 +34,7 @@ export default function VideoCard({ video, onClick, onDelete, showDelete }: Vide
 
   return (
     <Card 
-      className="group overflow-hidden bg-card border-border hover:border-primary transition-all duration-300 cursor-pointer hover-scale"
+      className="group overflow-hidden bg-card border-border hover:border-primary transition-all duration-500 cursor-pointer hover-scale hover:shadow-xl hover:shadow-primary/20"
       onClick={onClick}
     >
       <div className="relative aspect-video overflow-hidden">

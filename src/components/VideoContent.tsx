@@ -105,6 +105,20 @@ export default function VideoContent({
             </section>
           )}
 
+          {!showBanner && (
+            <div className="mb-6 flex justify-center">
+              <Button
+                variant="outline"
+                size="sm"
+                className="gap-2"
+                onClick={() => setShowBanner(true)}
+              >
+                <Icon name="Eye" size={16} />
+                Показать баннер Trending
+              </Button>
+            </div>
+          )}
+
           <section className="mb-8">
             <h2 className="text-2xl font-bold mb-4 flex items-center gap-2">
               <Icon name="TrendingUp" size={24} />

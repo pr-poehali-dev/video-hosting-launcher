@@ -3,6 +3,7 @@ import Header from '@/components/Header';
 import VideoPlayer from '@/components/VideoPlayer';
 import VideoContent from '@/components/VideoContent';
 import UploadVideoForm from '@/components/UploadVideoForm';
+import DeleteConfirmDialog from '@/components/DeleteConfirmDialog';
 import { useToast } from '@/hooks/use-toast';
 import type { ViewType } from '@/components/Header';
 import type { Video } from '@/components/VideoCard';
@@ -86,6 +87,8 @@ export default function Index() {
   const [selectedVideo, setSelectedVideo] = useState(mockVideos[0]);
   const [videoQuality, setVideoQuality] = useState('1080p');
   const [showUploadForm, setShowUploadForm] = useState(false);
+  const [showDeleteDialog, setShowDeleteDialog] = useState(false);
+  const [videoToDelete, setVideoToDelete] = useState<Video | null>(null);
   const [videos, setVideos] = useState(mockVideos);
 
   const handleUploadSuccess = (newVideo: Video) => {
@@ -93,13 +96,25 @@ export default function Index() {
   };
 
   const handleDeleteVideo = (videoId: number) => {
-    setVideos(videos.filter(v => v.id !== videoId));
-    toast({
-      title: 'Видео удалено',
-      description: 'Видео успешно удалено из каталога'
-    });
-    if (selectedVideo.id === videoId) {
-      setActiveView('profile');
+    const video = videos.find(v => v.id === videoId);
+    if (video) {
+      setVideoToDelete(video);
+      setShowDeleteDialog(true);
+    }
+  };
+
+  const confirmDelete = () => {
+    if (videoToDelete) {
+      setVideos(videos.filter(v => v.id !== videoToDelete.id));
+      toast({
+        title: 'Видео удалено',
+        description: 'Видео успешно удалено из каталога'
+      });
+      if (selectedVideo.id === videoToDelete.id) {
+        setActiveView('profile');
+      }
+      setShowDeleteDialog(false);
+      setVideoToDelete(null);
     }
   };
 
@@ -117,6 +132,17 @@ export default function Index() {
         <UploadVideoForm
           onClose={() => setShowUploadForm(false)}
           onUploadSuccess={handleUploadSuccess}
+        />
+      )}
+
+      {showDeleteDialog && videoToDelete && (
+        <DeleteConfirmDialog
+          videoTitle={videoToDelete.title}
+          onConfirm={confirmDelete}
+          onCancel={() => {
+            setShowDeleteDialog(false);
+            setVideoToDelete(null);
+          }}
         />
       )}
 

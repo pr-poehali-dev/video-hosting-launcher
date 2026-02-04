@@ -2,6 +2,7 @@ import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import { Avatar, AvatarFallback } from '@/components/ui/avatar';
 import Icon from '@/components/ui/icon';
+import { useTheme } from '@/hooks/use-theme';
 
 type ViewType = 'home' | 'catalog' | 'player' | 'profile' | 'favorites';
 
@@ -14,6 +15,8 @@ interface HeaderProps {
 }
 
 export default function Header({ searchQuery, setSearchQuery, activeView, setActiveView, onUploadClick }: HeaderProps) {
+  const { theme, toggleTheme } = useTheme();
+  
   return (
     <header className="sticky top-0 z-50 bg-background/95 backdrop-blur-sm border-b border-border">
       <div className="container mx-auto px-4 py-3">
@@ -77,6 +80,9 @@ export default function Header({ searchQuery, setSearchQuery, activeView, setAct
             >
               <Icon name="Upload" size={18} />
               <span className="hidden sm:inline">Загрузить</span>
+            </Button>
+            <Button size="icon" variant="ghost" onClick={toggleTheme}>
+              <Icon name={theme === 'dark' ? 'Sun' : 'Moon'} size={20} />
             </Button>
             <Button size="icon" variant="ghost">
               <Icon name="Bell" size={20} />

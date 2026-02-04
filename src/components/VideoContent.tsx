@@ -65,28 +65,28 @@ export default function VideoContent({
       {activeView === 'home' && (
         <>
           <section className="mb-8">
-            <div className="relative aspect-[21/9] rounded-xl overflow-hidden mb-8">
+            <div className="relative aspect-[21/6] rounded-xl overflow-hidden mb-8">
               <img 
                 src="https://images.unsplash.com/photo-1536440136628-849c177e76a1?w=1600&h=600&fit=crop"
                 alt="Hero"
                 className="w-full h-full object-cover"
               />
               <div className="absolute inset-0 bg-gradient-to-r from-black/80 via-black/40 to-transparent flex items-center">
-                <div className="container mx-auto px-8 max-w-2xl animate-slide-up">
-                  <Badge className="mb-3 gradient-primary">Trending</Badge>
-                  <h2 className="text-5xl font-bold mb-4">Топ видео недели</h2>
-                  <p className="text-lg text-foreground/90 mb-6">
+                <div className="container mx-auto px-6 max-w-xl animate-slide-up">
+                  <Badge className="mb-2 gradient-primary text-xs">Trending</Badge>
+                  <h2 className="text-3xl font-bold mb-2">Топ видео недели</h2>
+                  <p className="text-sm text-foreground/90 mb-4">
                     Самые популярные и обсуждаемые видео за последние 7 дней
                   </p>
                   <Button 
-                    size="lg" 
+                    size="sm" 
                     className="gradient-primary gap-2"
                     onClick={() => {
                       setActiveView('player');
                       setSelectedVideo(mockVideos[0]);
                     }}
                   >
-                    <Icon name="Play" size={20} />
+                    <Icon name="Play" size={16} />
                     Смотреть сейчас
                   </Button>
                 </div>

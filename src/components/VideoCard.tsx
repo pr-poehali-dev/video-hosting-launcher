@@ -1,6 +1,8 @@
 import { Card } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Avatar, AvatarFallback } from '@/components/ui/avatar';
+import { Button } from '@/components/ui/button';
+import Icon from '@/components/ui/icon';
 
 interface Video {
   id: number;
@@ -18,9 +20,18 @@ interface Video {
 interface VideoCardProps {
   video: Video;
   onClick?: () => void;
+  onDelete?: () => void;
+  showDelete?: boolean;
 }
 
-export default function VideoCard({ video, onClick }: VideoCardProps) {
+export default function VideoCard({ video, onClick, onDelete, showDelete }: VideoCardProps) {
+  const handleDelete = (e: React.MouseEvent) => {
+    e.stopPropagation();
+    if (onDelete) {
+      onDelete();
+    }
+  };
+
   return (
     <Card 
       className="group overflow-hidden bg-card border-border hover:border-primary transition-all duration-300 cursor-pointer hover-scale"
@@ -41,6 +52,16 @@ export default function VideoCard({ video, onClick }: VideoCardProps) {
             <Badge className="bg-primary text-xs">HD</Badge>
           )}
         </div>
+        {showDelete && (
+          <Button
+            size="icon"
+            variant="destructive"
+            className="absolute top-2 right-2 h-8 w-8 opacity-0 group-hover:opacity-100 transition-opacity"
+            onClick={handleDelete}
+          >
+            <Icon name="Trash2" size={16} />
+          </Button>
+        )}
       </div>
       <div className="p-3">
         <div className="flex gap-3">

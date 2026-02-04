@@ -3,6 +3,7 @@ import Header from '@/components/Header';
 import VideoPlayer from '@/components/VideoPlayer';
 import VideoContent from '@/components/VideoContent';
 import UploadVideoForm from '@/components/UploadVideoForm';
+import { useToast } from '@/hooks/use-toast';
 import type { ViewType } from '@/components/Header';
 import type { Video } from '@/components/VideoCard';
 
@@ -78,6 +79,7 @@ const mockVideos = [
 const categories = ['Все', 'Путешествия', 'Кулинария', 'Технологии', 'Спорт', 'Наука', 'Музыка', 'Игры'];
 
 export default function Index() {
+  const { toast } = useToast();
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedCategory, setSelectedCategory] = useState('Все');
   const [activeView, setActiveView] = useState<ViewType>('home');
@@ -88,6 +90,17 @@ export default function Index() {
 
   const handleUploadSuccess = (newVideo: Video) => {
     setVideos([newVideo, ...videos]);
+  };
+
+  const handleDeleteVideo = (videoId: number) => {
+    setVideos(videos.filter(v => v.id !== videoId));
+    toast({
+      title: 'Видео удалено',
+      description: 'Видео успешно удалено из каталога'
+    });
+    if (selectedVideo.id === videoId) {
+      setActiveView('profile');
+    }
   };
 
   return (
@@ -126,6 +139,7 @@ export default function Index() {
           mockVideos={videos}
           setActiveView={setActiveView}
           setSelectedVideo={setSelectedVideo}
+          onDeleteVideo={handleDeleteVideo}
         />
       )}
     </div>

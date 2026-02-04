@@ -19,6 +19,7 @@ interface VideoContentProps {
   mockVideos: Video[];
   setActiveView: (view: ViewType) => void;
   setSelectedVideo: (video: Video) => void;
+  onDeleteVideo?: (videoId: number) => void;
 }
 
 export default function VideoContent({
@@ -28,7 +29,8 @@ export default function VideoContent({
   categories,
   mockVideos,
   setActiveView,
-  setSelectedVideo
+  setSelectedVideo,
+  onDeleteVideo
 }: VideoContentProps) {
   const [favoriteVideos, setFavoriteVideos] = useState<Video[]>([]);
   const [showProfileEdit, setShowProfileEdit] = useState(false);
@@ -236,9 +238,9 @@ export default function VideoContent({
             </div>
           </Card>
 
-          <h3 className="text-xl font-bold mb-4">История просмотров</h3>
+          <h3 className="text-xl font-bold mb-4">Мои видео</h3>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-            {mockVideos.slice(0, 6).map((video) => (
+            {mockVideos.filter(v => v.author === profile.name).map((video) => (
               <VideoCard 
                 key={video.id} 
                 video={video}
@@ -246,6 +248,8 @@ export default function VideoContent({
                   setActiveView('player');
                   setSelectedVideo(video);
                 }}
+                showDelete={true}
+                onDelete={() => onDeleteVideo && onDeleteVideo(video.id)}
               />
             ))}
           </div>

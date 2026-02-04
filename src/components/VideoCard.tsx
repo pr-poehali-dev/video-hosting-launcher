@@ -12,6 +12,7 @@ interface Video {
   authorAvatar: string;
   uploadDate: string;
   quality: string[];
+  videoUrl?: string;
 }
 
 interface VideoCardProps {

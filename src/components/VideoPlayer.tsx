@@ -55,7 +55,7 @@ export default function VideoPlayer({
         <div className="lg:col-span-2 space-y-4">
           <Card className="overflow-hidden border-border p-0">
             <CustomVideoPlayer
-              videoUrl="https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4"
+              videoUrl={selectedVideo.videoUrl || "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4"}
               thumbnailUrl={selectedVideo.thumbnail}
               title={selectedVideo.title}
               qualities={selectedVideo.quality}

@@ -1,9 +1,7 @@
-import { useState } from 'react';
 import { Card } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Avatar, AvatarFallback } from '@/components/ui/avatar';
 import { Button } from '@/components/ui/button';
-import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
 import { useToast } from '@/hooks/use-toast';
 import { storage } from '@/lib/storage';
 import Icon from '@/components/ui/icon';
@@ -31,7 +29,6 @@ interface VideoCardProps {
 
 export default function VideoCard({ video, onClick, onDelete, showDelete, onAddToQueue }: VideoCardProps) {
   const { toast } = useToast();
-  const [dropdownOpen, setDropdownOpen] = useState(false);
 
   const handleDelete = (e: React.MouseEvent) => {
     e.stopPropagation();
@@ -50,7 +47,6 @@ export default function VideoCard({ video, onClick, onDelete, showDelete, onAddT
     if (onAddToQueue) {
       onAddToQueue(video.id);
     }
-    setDropdownOpen(false);
   };
 
   return (
@@ -102,23 +98,15 @@ export default function VideoCard({ video, onClick, onDelete, showDelete, onAddT
                 <span>•</span>
                 <span>{video.uploadDate}</span>
               </div>
-              <DropdownMenu open={dropdownOpen} onOpenChange={setDropdownOpen}>
-                <DropdownMenuTrigger asChild onClick={(e) => e.stopPropagation()}>
-                  <Button 
-                    variant="ghost" 
-                    size="icon" 
-                    className="h-6 w-6 opacity-0 group-hover:opacity-100 transition-opacity"
-                  >
-                    <Icon name="MoreVertical" size={14} />
-                  </Button>
-                </DropdownMenuTrigger>
-                <DropdownMenuContent align="end">
-                  <DropdownMenuItem onClick={handleAddToQueue}>
-                    <Icon name="ListPlus" size={16} className="mr-2" />
-                    Добавить в очередь
-                  </DropdownMenuItem>
-                </DropdownMenuContent>
-              </DropdownMenu>
+              <Button 
+                variant="ghost" 
+                size="icon" 
+                className="h-6 w-6 opacity-0 group-hover:opacity-100 transition-opacity"
+                onClick={handleAddToQueue}
+                title="Добавить в очередь"
+              >
+                <Icon name="ListPlus" size={14} />
+              </Button>
             </div>
           </div>
         </div>

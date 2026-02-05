@@ -1,8 +1,10 @@
+import { useEffect, useState } from 'react';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import { Avatar, AvatarFallback } from '@/components/ui/avatar';
 import Icon from '@/components/ui/icon';
 import { useTheme } from '@/hooks/use-theme';
+import { storage } from '@/lib/storage';
 
 type ViewType = 'home' | 'catalog' | 'player' | 'profile' | 'favorites' | 'queue';
 
@@ -16,6 +18,14 @@ interface HeaderProps {
 
 export default function Header({ searchQuery, setSearchQuery, activeView, setActiveView, onUploadClick }: HeaderProps) {
   const { theme, toggleTheme } = useTheme();
+  const [profile, setProfile] = useState(() => storage.getProfile());
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setProfile(storage.getProfile());
+    }, 500);
+    return () => clearInterval(interval);
+  }, []);
   
   return (
     <header className="sticky top-0 z-50 bg-background/95 backdrop-blur-sm border-b border-border">
@@ -103,7 +113,7 @@ export default function Header({ searchQuery, setSearchQuery, activeView, setAct
               onClick={() => setActiveView('profile')}
             >
               <AvatarFallback className="gradient-accent font-bold">
-                МП
+                {profile.avatar}
               </AvatarFallback>
             </Avatar>
           </div>

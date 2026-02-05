@@ -23,7 +23,7 @@ export default function Header({ searchQuery, setSearchQuery, activeView, setAct
         <div className="flex items-center justify-between gap-4">
           <div className="flex items-center gap-6">
             <div className="flex items-center gap-2 cursor-pointer group" onClick={() => setActiveView('home')}>
-              <Icon name="Play" size={28} className="text-primary transition-transform duration-300 group-hover:rotate-[360deg] group-hover:scale-110" />
+              <Icon name="Box" size={28} className="text-primary transition-transform duration-300 group-hover:rotate-[360deg] group-hover:scale-110" />
               <h1 className="text-2xl font-bold text-primary transition-all duration-300 group-hover:scale-105 group-hover:tracking-wider">
                 CubeTybe
               </h1>

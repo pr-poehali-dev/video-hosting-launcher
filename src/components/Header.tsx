@@ -25,7 +25,7 @@ export default function Header({ searchQuery, setSearchQuery, activeView, setAct
             <div className="flex items-center gap-2 cursor-pointer hover-scale" onClick={() => setActiveView('home')}>
               <Icon name="Play" size={28} className="text-primary" />
               <h1 className="text-2xl font-bold gradient-primary bg-clip-text text-transparent">
-                VideoHost
+                CubeTybe
               </h1>
             </div>
             <nav className="hidden md:flex gap-1">

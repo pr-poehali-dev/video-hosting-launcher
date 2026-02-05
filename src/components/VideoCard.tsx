@@ -1,7 +1,11 @@
+import { useState } from 'react';
 import { Card } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Avatar, AvatarFallback } from '@/components/ui/avatar';
 import { Button } from '@/components/ui/button';
+import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
+import { useToast } from '@/hooks/use-toast';
+import { storage } from '@/lib/storage';
 import Icon from '@/components/ui/icon';
 
 interface Video {
@@ -22,14 +26,31 @@ interface VideoCardProps {
   onClick?: () => void;
   onDelete?: () => void;
   showDelete?: boolean;
+  onAddToQueue?: (videoId: number) => void;
 }
 
-export default function VideoCard({ video, onClick, onDelete, showDelete }: VideoCardProps) {
+export default function VideoCard({ video, onClick, onDelete, showDelete, onAddToQueue }: VideoCardProps) {
+  const { toast } = useToast();
+  const [dropdownOpen, setDropdownOpen] = useState(false);
+
   const handleDelete = (e: React.MouseEvent) => {
     e.stopPropagation();
     if (onDelete) {
       onDelete();
     }
+  };
+
+  const handleAddToQueue = (e: React.MouseEvent) => {
+    e.stopPropagation();
+    storage.addToQueue(video.id);
+    toast({
+      title: 'Добавлено в очередь',
+      description: `Видео "${video.title}" добавлено в очередь просмотра`
+    });
+    if (onAddToQueue) {
+      onAddToQueue(video.id);
+    }
+    setDropdownOpen(false);
   };
 
   return (
@@ -75,10 +96,29 @@ export default function VideoCard({ video, onClick, onDelete, showDelete }: Vide
               {video.title}
             </h3>
             <p className="text-xs text-muted-foreground mt-1">{video.author}</p>
-            <div className="flex items-center gap-2 text-xs text-muted-foreground mt-1">
-              <span>{video.views} просмотров</span>
-              <span>•</span>
-              <span>{video.uploadDate}</span>
+            <div className="flex items-center justify-between gap-2 text-xs text-muted-foreground mt-1">
+              <div className="flex items-center gap-2">
+                <span>{video.views} просмотров</span>
+                <span>•</span>
+                <span>{video.uploadDate}</span>
+              </div>
+              <DropdownMenu open={dropdownOpen} onOpenChange={setDropdownOpen}>
+                <DropdownMenuTrigger asChild onClick={(e) => e.stopPropagation()}>
+                  <Button 
+                    variant="ghost" 
+                    size="icon" 
+                    className="h-6 w-6 opacity-0 group-hover:opacity-100 transition-opacity"
+                  >
+                    <Icon name="MoreVertical" size={14} />
+                  </Button>
+                </DropdownMenuTrigger>
+                <DropdownMenuContent align="end">
+                  <DropdownMenuItem onClick={handleAddToQueue}>
+                    <Icon name="ListPlus" size={16} className="mr-2" />
+                    Добавить в очередь
+                  </DropdownMenuItem>
+                </DropdownMenuContent>
+              </DropdownMenu>
             </div>
           </div>
         </div>

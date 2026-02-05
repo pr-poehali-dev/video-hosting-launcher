@@ -35,17 +35,17 @@ export default function VideoContent({
   const [favoriteVideos, setFavoriteVideos] = useState<Video[]>([]);
   const [showProfileEdit, setShowProfileEdit] = useState(false);
   const [showBanner, setShowBanner] = useState(true);
-  const [profile, setProfile] = useState({
-    name: 'Мой Профиль',
-    bio: 'Пользователь с 2024 года',
-    avatar: 'МП'
-  });
+  const [profile, setProfile] = useState(() => storage.getProfile());
 
   useEffect(() => {
     const favoriteIds = storage.getFavoriteVideos();
     const favorites = mockVideos.filter(video => favoriteIds.includes(video.id));
     setFavoriteVideos(favorites);
   }, [mockVideos, activeView]);
+
+  useEffect(() => {
+    storage.saveProfile(profile);
+  }, [profile]);
 
   return (
     <div className="container mx-auto px-4 py-6 animate-fade-in">

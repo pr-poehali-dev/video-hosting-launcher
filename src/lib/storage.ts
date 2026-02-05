@@ -2,9 +2,17 @@ export interface UserData {
   likes: Set<number>;
   subscriptions: Set<string>;
   favorites: Set<number>;
+  queue: number[];
+}
+
+export interface ProfileData {
+  name: string;
+  bio: string;
+  avatar: string;
 }
 
 const STORAGE_KEY = 'videohost_user_data';
+const PROFILE_KEY = 'videohost_profile';
 
 export const storage = {
   getUserData(): UserData {
@@ -13,7 +21,8 @@ export const storage = {
       return {
         likes: new Set(),
         subscriptions: new Set(),
-        favorites: new Set()
+        favorites: new Set(),
+        queue: []
       };
     }
     
@@ -21,7 +30,8 @@ export const storage = {
     return {
       likes: new Set(parsed.likes || []),
       subscriptions: new Set(parsed.subscriptions || []),
-      favorites: new Set(parsed.favorites || [])
+      favorites: new Set(parsed.favorites || []),
+      queue: parsed.queue || []
     };
   },
 
@@ -29,7 +39,8 @@ export const storage = {
     const serialized = {
       likes: Array.from(data.likes),
       subscriptions: Array.from(data.subscriptions),
-      favorites: Array.from(data.favorites)
+      favorites: Array.from(data.favorites),
+      queue: data.queue
     };
     localStorage.setItem(STORAGE_KEY, JSON.stringify(serialized));
   },
@@ -95,5 +106,34 @@ export const storage = {
   getFavoriteVideos(): number[] {
     const data = this.getUserData();
     return Array.from(data.favorites);
+  },
+
+  addToQueue(videoId: number) {
+    const data = this.getUserData();
+    if (!data.queue.includes(videoId)) {
+      data.queue.push(videoId);
+      this.saveUserData(data);
+    }
+  },
+
+  getQueue(): number[] {
+    const data = this.getUserData();
+    return data.queue;
+  },
+
+  getProfile(): ProfileData {
+    const data = localStorage.getItem(PROFILE_KEY);
+    if (!data) {
+      return {
+        name: 'Мой Профиль',
+        bio: 'Пользователь с 2024 года',
+        avatar: 'МП'
+      };
+    }
+    return JSON.parse(data);
+  },
+
+  saveProfile(profile: ProfileData) {
+    localStorage.setItem(PROFILE_KEY, JSON.stringify(profile));
   }
 };

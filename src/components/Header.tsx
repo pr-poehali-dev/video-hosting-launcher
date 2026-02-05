@@ -4,7 +4,7 @@ import { Avatar, AvatarFallback } from '@/components/ui/avatar';
 import Icon from '@/components/ui/icon';
 import { useTheme } from '@/hooks/use-theme';
 
-type ViewType = 'home' | 'catalog' | 'player' | 'profile' | 'favorites';
+type ViewType = 'home' | 'catalog' | 'player' | 'profile' | 'favorites' | 'queue';
 
 interface HeaderProps {
   searchQuery: string;
@@ -57,6 +57,15 @@ export default function Header({ searchQuery, setSearchQuery, activeView, setAct
               >
                 <Icon name="Heart" size={16} />
                 Избранное
+              </Button>
+              <Button 
+                variant={activeView === 'queue' ? 'default' : 'ghost'}
+                size="sm"
+                onClick={() => setActiveView('queue')}
+                className="gap-2"
+              >
+                <Icon name="ListVideo" size={16} />
+                Очередь
               </Button>
             </nav>
           </div>

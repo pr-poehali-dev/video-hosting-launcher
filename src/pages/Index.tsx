@@ -156,7 +156,7 @@ export default function Index() {
         />
       )}
 
-      {(activeView === 'home' || activeView === 'catalog' || activeView === 'favorites' || activeView === 'profile') && (
+      {(activeView === 'home' || activeView === 'catalog' || activeView === 'favorites' || activeView === 'profile' || activeView === 'queue') && (
         <VideoContent 
           activeView={activeView}
           selectedCategory={selectedCategory}

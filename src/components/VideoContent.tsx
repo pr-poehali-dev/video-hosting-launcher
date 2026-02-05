@@ -33,6 +33,7 @@ export default function VideoContent({
   onDeleteVideo
 }: VideoContentProps) {
   const [favoriteVideos, setFavoriteVideos] = useState<Video[]>([]);
+  const [queueVideos, setQueueVideos] = useState<Video[]>([]);
   const [showProfileEdit, setShowProfileEdit] = useState(false);
   const [showBanner, setShowBanner] = useState(true);
   const [profile, setProfile] = useState(() => storage.getProfile());
@@ -41,6 +42,10 @@ export default function VideoContent({
     const favoriteIds = storage.getFavoriteVideos();
     const favorites = mockVideos.filter(video => favoriteIds.includes(video.id));
     setFavoriteVideos(favorites);
+    
+    const queueIds = storage.getQueue();
+    const queue = mockVideos.filter(video => queueIds.includes(video.id));
+    setQueueVideos(queue);
   }, [mockVideos, activeView]);
 
   useEffect(() => {
@@ -219,6 +224,35 @@ export default function VideoContent({
               <Icon name="Heart" size={48} className="mx-auto mb-4 text-muted-foreground" />
               <p className="text-muted-foreground">Нет избранных видео</p>
               <p className="text-sm text-muted-foreground mt-2">Добавляйте видео в избранное, нажимая на кнопку сердечка</p>
+            </Card>
+          )}
+        </section>
+      )}
+
+      {activeView === 'queue' && (
+        <section>
+          <h2 className="text-2xl font-bold mb-4 flex items-center gap-2">
+            <Icon name="ListVideo" size={24} className="text-primary" />
+            Очередь просмотра
+          </h2>
+          {queueVideos.length > 0 ? (
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+              {queueVideos.map((video) => (
+                <VideoCard 
+                  key={video.id} 
+                  video={video}
+                  onClick={() => {
+                    setActiveView('player');
+                    setSelectedVideo(video);
+                  }}
+                />
+              ))}
+            </div>
+          ) : (
+            <Card className="p-12 text-center">
+              <Icon name="ListVideo" size={48} className="mx-auto mb-4 text-muted-foreground" />
+              <p className="text-muted-foreground">Очередь пуста</p>
+              <p className="text-sm text-muted-foreground mt-2">Добавляйте видео в очередь, нажимая на кнопку списка</p>
             </Card>
           )}
         </section>
